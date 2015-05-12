@@ -1,0 +1,31 @@
+{
+  "name": "angular-hu-headers",
+  "version": "1.1.0-alpha2",
+  "authors": [
+    "Javier Mendiara Cañardo <javier.mendiaracanardo@telefonica.com>"
+  ],
+  "description": "Add custom response headers to your angular request to have extra information about it",
+  "main": "headers.js",
+  "keywords": [
+    "angular",
+    "utilities",
+    "http",
+    "$http",
+    "headers",
+    "$httpBackend",
+    "cache"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular-hu/angular-hu"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/angular-hu/angular-hu",
+  "ignore": [
+    "index.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "angular": ">= 1.2.7"
+  }
+}
