@@ -29,6 +29,9 @@
 <code>httpu-request-time</code>: The time the request took to complete</li>
 <li>
 <code>httpu-request-url</code>: The url used, with all the parameters</li>
+<li>
+<code>httpu-cached-at</code>: The time a cached request was added to the cache specified in <code>$http</code>
+</li>
 </ul>
 
 <h3>
@@ -50,17 +53,24 @@
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
 <div class="highlight highlight-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>MyApp<span class="pl-pds">'</span></span>)
-.run(<span class="pl-k">function</span>(<span class="pl-smi">$http</span>) {
+.factory(<span class="pl-s"><span class="pl-pds">'</span>myCache<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">huFromCache</span>, <span class="pl-smi">$cacheFactory</span>) {
+  <span class="pl-k">var</span> cache <span class="pl-k">=</span> $cacheFactory(<span class="pl-s"><span class="pl-pds">'</span>apicache<span class="pl-pds">'</span></span>);
+  <span class="pl-k">return</span> huFromCache(cache);
+})
+.run(<span class="pl-k">function</span>(<span class="pl-smi">$http</span>, <span class="pl-smi">myCache</span>) {
   <span class="pl-c">//Make a timestamped request, and cache response for id=5. timestamp param will be removed</span>
   $http.get(<span class="pl-s"><span class="pl-pds">'</span>http://myapi.com/things<span class="pl-pds">'</span></span>, {
     params<span class="pl-k">:</span> {
       id<span class="pl-k">:</span> <span class="pl-c1">5</span>
-    }
+    },
+    cache<span class="pl-k">:</span> myCache
   }).then(<span class="pl-k">function</span>(<span class="pl-smi">response</span>) {
     <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>The request was to the endopoint: <span class="pl-pds">'</span></span>, response.<span class="pl-c1">headers</span>(<span class="pl-s"><span class="pl-pds">'</span>httpu-request-url<span class="pl-pds">'</span></span>));
     <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>The request took <span class="pl-pds">'</span></span>, response.<span class="pl-c1">headers</span>(<span class="pl-s"><span class="pl-pds">'</span>httpu-request-time<span class="pl-pds">'</span></span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
+    <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>The request was cached at<span class="pl-pds">'</span></span>, response.<span class="pl-c1">headers</span>(<span class="pl-s"><span class="pl-pds">'</span>httpu-cached-at<span class="pl-pds">'</span></span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
     <span class="pl-c">//'The request was to the endopoint: http://myapi.com/things?id=5</span>
     <span class="pl-c">//'The request took 123ms</span>
+    <span class="pl-c">//'The request was cached at 1431335511216ms</span>
   });
 });</pre></div>
 
@@ -73,6 +83,7 @@
 
 <ul>
 <li>You want to know the final URL used for your request (this may be computed by $http before leaving to $httpBackend) to  delete cache entries, log them...</li>
+<li>You wanna know if the request you performed hit your <code>$http</code> request cache</li>
 <li>Wanna collect statistics information for your backend responses accessed over the worldwide clients.</li>
 </ul>
 
